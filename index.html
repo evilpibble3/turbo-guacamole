@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games Hub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="header-container">
+        <div class="brand-section">
+            <h1>Games <span id="game-count">0</span></h1>
+            <!-- Special button to visit your custom browser page -->
+            <button class="nav-btn" onclick="location.href='browser.html'">🌐 Launch Browser Proxy</button>
+        </div>
+        <div class="search-section">
+            <input type="text" id="search-bar" placeholder="Search games..." oninput="filterGames()">
+        </div>
+    </div>
+
+    <!-- The 16px Rounded Window Grid Setup -->
+    <div class="games-grid" id="grid-container"></div>
+
+    <script>
+        let allGames = [];
+
+        fetch('games.json')
+            .then(response => response.json())
+            .then(data => {
+                allGames = data;
+                document.getElementById('game-count').innerText = allGames.length;
+                displayGames(allGames);
+            })
+            .catch(error => console.error('Error loading database:', error));
+
+        function displayGames(gamesList) {
+            const container = document.getElementById('grid-container');
+            container.innerHTML = ''; 
+
+            gamesList.forEach(game => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                card.onclick = () => { window.location.href = game.pageUrl; };
+
+                const img = document.createElement('img');
+                img.src = game.thumbnail;
+                img.alt = game.title;
+                img.loading = "lazy";
+
+                card.appendChild(img);
+                container.appendChild(card);
+            });
+        }
+
+        function filterGames() {
+            const query = document.getElementById('search-bar').value.toLowerCase();
+            const filtered = allGames.filter(game => game.title.toLowerCase().includes(query));
+            displayGames(filtered);
+        }
+    </script>
+</body>
+</html>
