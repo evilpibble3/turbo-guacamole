@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Web Browser</title>
+    <style>
+        body { margin: 0; background: #fcf8f2; font-family: sans-serif; display: flex; flex-direction: column; height: 100vh; }
+        .browser-bar { display: flex; padding: 12px; background: #eadecf; gap: 10px; align-items: center; }
+        #url-input { flex: 1; padding: 10px 16px; border-radius: 20px; border: none; background: #f1e6da; color: #4a3e3d; font-size: 14px; outline: none; }
+        button { padding: 10px 20px; background: #2c2724; color: white; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; }
+        iframe { flex: 1; border: none; background: white; width: 100%; }
+    </style>
+</head>
+<body>
+    <div class="browser-bar">
+        <button onclick="location.href='index.html'">← Home</button>
+        <input type="text" id="url-input" placeholder="Enter website address (e.g., wikipedia.org)...">
+        <button onclick="launchURL()">Go</button>
+    </div>
+    <iframe id="browser-view" src="about:blank"></iframe>
+    <script>
+        function launchURL() {
+            let input = document.getElementById('url-input').value.trim();
+            if (!input) return;
+            if (!input.startsWith('http://') && !input.startsWith('https://')) { input = 'https://' + input; }
+            
+            // Uses a public proxy gatekeeper to open external windows inside the iframe safely
+            document.getElementById('browser-view').src = "https://allorigins.win" + encodeURIComponent(input);
+        }
+    </script>
+</body>
+</html>
